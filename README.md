@@ -1,2 +1,2 @@
-# date-picker
-Custom date picker web component. Accessible and multi-lingual.
+# Date picker 📆
+Custom date picker web component with accessiblity and multi-language support.
