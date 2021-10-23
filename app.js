@@ -60,5 +60,12 @@ class Day {
 }
 }
 
+class Month {
+    constructor(date =  null, lang = 'default') {
+
+    }
+}
+
 const day = new Day();
 console.log('--day', day.format('MMM DD (DDDD/WW) YYYY'))
+// reached tutorial 9:05 
