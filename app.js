@@ -10,8 +10,12 @@ function getWeekNumber(date) {
     return Math.ceil((pastDaysOfTheYear + firstDayOfTheYear.getDay() + 1) / 7);
 }
 
+function isLeapYear(year) {
+    return year % 100 === 0 ? year % 400 === 0 : year % 4 === 0;
+}
+
 // day class - smallest unit of calendar
-class Day {
+class Day {             
     constructor(date = null, lang = 'default') {
         date = date ?? new Date();
         this.Date = date; // i.e Sat Oct 23 2021 11:48:57 GMT+0100 (British Summer Time)
@@ -62,10 +66,35 @@ class Day {
 
 class Month {
     constructor(date =  null, lang = 'default') {
+        const day = new Day(null, lang);
+        const monthSize = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        this.lang = lang;
+        this.name = day.month; // 'October'
+        this.number = day.monthNumber; // 10 
+        this.year = day.year; // 2021
+        this.numberOfDays = monthSize[this.number - 1];
 
+        if (this.number === 2) {
+            this.numberOfDays += isLeapYear(day.year) ? 1 : 0;
+        }
+
+        // specify an iterator function for the month object to yield each day of the month as a Day object instance
+        this[Symbol.iterator] = function* () {
+            let number = 1; // first day of month
+            while(number <= this.numberOfDays) {
+                yield this.createDay(number)
+                number++;
+            }
+        }
+    }
+
+    createDay(date){
+        // months in js are zero-indexed (i.e October = 9) which is why this.number is subtracted by 1 to create the correct day instance 
+        return new Day(new Date(this.year, this.number - 1, date), this.lang);
     }
 }
 
 const day = new Day();
-console.log('--day', day.format('MMM DD (DDDD/WW) YYYY'))
-// reached tutorial 9:05 
+const month = new Month();
+console.log(month, [...month]);
+// console.log('--day', day.format('MMM DD (DDDD/WW) YYYY'))
